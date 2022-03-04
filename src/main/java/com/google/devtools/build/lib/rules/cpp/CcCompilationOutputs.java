@@ -67,6 +67,16 @@ public class CcCompilationOutputs implements CcCompilationOutputsApi<Artifact> {
   private final ImmutableList<Artifact> picGcnoFiles;
 
   /**
+   * All .gcno files built by the target, corresponding to .o outputs.
+   */
+  private final ImmutableList<Artifact> gcnoFiles;
+
+  /**
+   * All .pic.gcno files built by the target, corresponding to .pic.o outputs.
+   */
+  private final ImmutableList<Artifact> picGcnoFiles;
+
+  /**
    * All artifacts that are created if "--save_temps" is true.
    */
   private final NestedSet<Artifact> temps;
@@ -182,6 +192,30 @@ public class CcCompilationOutputs implements CcCompilationOutputsApi<Artifact> {
    */
   public ImmutableList<Artifact> getPicDwoFiles() {
     return picDwoFiles;
+  }
+  
+  /**
+   * Returns an unmodifiable view of the .gcno files set.
+   */
+  public ImmutableList<Artifact> getGcnoFiles() {
+    return gcnoFiles;
+  }
+
+  /**
+   * Returns an unmodifiable view of the PIC .gcno files set.
+   */
+  public ImmutableList<Artifact> getPicGcnoFiles() {
+    return picGcnoFiles;
+  }
+
+  @Override
+  public Sequence<Artifact> getStarlarkGcnoFiles() throws EvalException {
+    return StarlarkList.immutableCopyOf(getGcnoFiles());
+  }
+
+  @Override
+  public Sequence<Artifact> getStarlarkPicGcnoFiles() throws EvalException {
+    return StarlarkList.immutableCopyOf(getPicGcnoFiles());
   }
 
   @Override
@@ -348,6 +382,16 @@ public class CcCompilationOutputs implements CcCompilationOutputsApi<Artifact> {
     @CanIgnoreReturnValue
     public Builder addPicDwoFile(Artifact artifact) {
       picDwoFiles.add(artifact);
+      return this;
+    }
+   
+    public Builder addGcnoFile(Artifact artifact) {
+      gcnoFiles.add(artifact);
+      return this;
+    }
+
+    public Builder addPicGcnoFile(Artifact artifact) {
+      picGcnoFiles.add(artifact);
       return this;
     }
 
