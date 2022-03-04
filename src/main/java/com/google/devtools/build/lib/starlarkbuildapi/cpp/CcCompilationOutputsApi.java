@@ -73,4 +73,18 @@ public interface CcCompilationOutputsApi<FileT extends FileApi> extends Starlark
 
   @StarlarkMethod(name = "header_tokens", documented = false, useStarlarkThread = true)
   Sequence<FileT> getStarlarkHeaderTokens(StarlarkThread thread) throws EvalException;
+
+  @StarlarkMethod(
+      name = "gcno_files",
+      doc = "Non-PIC gcno files.",
+      documented = true,
+      structField = true)
+  Sequence<FileT> getStarlarkGcnoFiles() throws EvalException;
+
+  @StarlarkMethod(
+      name = "pic_gcno_files",
+      doc = "PIC gcno files.",
+      documented = true,
+      structField = true)
+  Sequence<FileT> getStarlarkPicGcnoFiles() throws EvalException;
 }

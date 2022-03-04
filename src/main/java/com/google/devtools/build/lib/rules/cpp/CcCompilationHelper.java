@@ -1887,11 +1887,8 @@ public final class CcCompilationHelper {
       String gcnoFileName =
           CppHelper.getArtifactNameForCategory(
               ruleErrorConsumer, ccToolchain, ArtifactCategory.COVERAGE_DATA_FILE, picOutputBase);
-      Artifact gcnoFile =
-          enableCoverage
-              ? CppHelper.getCompileOutputArtifact(
-                  actionConstructionContext, label, gcnoFileName, configuration)
-              : null;
+      Artifact gcnoFile = CppHelper.getCompileOutputArtifact(
+          actionConstructionContext, label, gcnoFileName, configuration);
       Artifact dwoFile =
           generateDwo && !bitcodeOutput ? getDwoFile(picBuilder.getOutputFile()) : null;
       Artifact ltoIndexingFile =
@@ -1940,6 +1937,9 @@ public final class CcCompilationHelper {
         // Host targets don't produce .dwo files.
         result.addPicDwoFile(dwoFile);
       }
+      if (gcnoFile != null) {
+        result.addPicGcnoFile(gcnoFile);
+      }
     }
 
     if (generateNoPicAction) {
@@ -1957,11 +1957,8 @@ public final class CcCompilationHelper {
               ruleErrorConsumer, ccToolchain, ArtifactCategory.COVERAGE_DATA_FILE, outputName);
 
       // Create no-PIC compile actions
-      Artifact gcnoFile =
-          enableCoverage
-              ? CppHelper.getCompileOutputArtifact(
-                  actionConstructionContext, label, gcnoFileName, configuration)
-              : null;
+      Artifact gcnoFile = CppHelper.getCompileOutputArtifact(
+          actionConstructionContext, label, gcnoFileName, configuration);
 
       Artifact noPicDwoFile = generateDwo && !bitcodeOutput ? getDwoFile(noPicOutputFile) : null;
       Artifact ltoIndexingFile = bitcodeOutput ? getLtoIndexingFile(builder.getOutputFile()) : null;
@@ -2008,6 +2005,9 @@ public final class CcCompilationHelper {
       if (noPicDwoFile != null) {
         // Host targets don't produce .dwo files.
         result.addDwoFile(noPicDwoFile);
+      }
+      if (gcnoFile != null) {
+        result.addGcnoFile(gcnoFile);
       }
     }
     return directOutputs.build();
