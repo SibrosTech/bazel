@@ -494,7 +494,6 @@ public final class CcToolchainProvider extends NativeInfo
 
   @Override
   public Depset getCompilerFilesForStarlark(StarlarkThread thread) throws EvalException {
-    CcModule.checkPrivateStarlarkificationAllowlist(thread);
     return Depset.of(Artifact.class, getCompilerFiles());
   }
 
